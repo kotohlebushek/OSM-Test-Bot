@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Карта</title>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        html, body, #map { height: 100%; margin: 0; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+        const map = L.map('map').setView([{{ center_lat }}, {{ center_lon }}], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        const markers = {{ markers|tojson }};
+        markers.forEach(m => {
+            const date = new Date(m.created_at);
+            const hours = date.getUTCHours() + 3; // Переводим в МСК (UTC+3)
+            const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+            const formattedTime = `${hours}:${minutes}`;
+
+            L.marker([m.latitude, m.longitude])
+                .addTo(map)
+                .bindPopup(`#${m.id} <br> ${formattedTime} ${m.comment}`);
+        });
+    </script>
+</body>
+</html>
