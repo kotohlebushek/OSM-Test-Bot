@@ -35,7 +35,6 @@ def main_keyboard():
 
 @dp.message(Command("start"))
 async def start(message: types.Message, state: FSMContext):
-    await message.answer(str(await bot.me()))
     user, created = await User.get_or_create(id=message.from_user.id)
 
     if created or user.map_center_latitude is None:
