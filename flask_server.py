@@ -22,7 +22,7 @@ async def user_map(user_id):
     if not user:
         return "Пользователь не найден", 404
 
-    markers = await Marker.filter(user_id=user_id).values("id", "latitude", "longitude", "comment", "created_at")
+    markers = await Marker.all().values("id", "latitude", "longitude", "comment", "created_at")
 
     return render_template("map_template.html",
                            center_lat=user.map_center_latitude or 55.751244,
