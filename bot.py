@@ -113,12 +113,12 @@ async def delete_marker(message: types.Message, state: FSMContext):
             await marker.delete()
             await message.answer("Метка удалена.", reply_markup=main_keyboard())
         else:
-            marker.delete_requests += 1
+            await marker.delete_requests.add(user)  # где user — объект пользователя
             await marker.save()
             await message.answer(
                 "Запрос на удаление отправлен. Если 3 разных пользователя отправят запрос, метка будет удалена.")
 
-            if marker.delete_requests >= 3:
+            if await marker.delete_requests.all().count() >= 3:
                 await marker.delete()
                 await message.answer("Метка была удалена после 3-х запросов.")
 
